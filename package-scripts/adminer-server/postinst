@@ -1,0 +1,72 @@
+#!/bin/sh
+#
+# Perform necessary adminer-server setup steps
+# after package is installed.
+#
+
+PROGNAME=`basename $0`
+
+error_exit()
+{
+  echo "${PROGNAME}: ${1:-"Unknown Error"}" 1>&2
+  exit 1
+}
+
+getent group adminer-server >/dev/null || /usr/sbin/groupadd -r adminer-server
+getent passwd adminer-server >/dev/null || \
+  /usr/sbin/useradd -r -g adminer-server -d /var/lib/adminer-server -s /sbin/nologin -c 'adminer-server' adminer-server
+
+if [ -d "/etc/logrotate.d/" ]; then
+  cp -f /opt/adminer-server/etc/logrotate.d/adminer-server /etc/logrotate.d/adminer-server
+fi
+
+if [ ! -e "/etc/adminer-server" ]; then
+  mkdir -p /etc/adminer-server
+fi
+
+if [ ! -e "/etc/adminer-server/php.conf.d" ]; then
+  mkdir -p /etc/adminer-server/php.conf.d
+fi
+
+if [ ! -e "/etc/adminer-server/httpd.conf" ]; then
+    cp -f /opt/adminer-server/etc/adminer-server/httpd.conf /etc/adminer-server/httpd.conf
+fi
+
+if [ ! -e "/etc/adminer-server/php.ini" ]; then
+    cp -f /opt/adminer-server/etc/adminer-server/php.ini /etc/adminer-server/php.ini
+fi
+
+if [ ! -e "/var/log/adminer-server" ]; then
+  mkdir -p /var/log/adminer-server
+fi
+
+if [ ! -e "/var/run/adminer-server" ]; then
+  mkdir -p /var/run/adminer-server
+fi
+
+if [ ! -e "/var/lib/adminer-server" ]; then
+  mkdir -p /var/lib/adminer-server
+  mkdir -p /var/lib/adminer-server/php_session
+  mkdir -p /var/lib/adminer-server/public
+  cp -f /opt/adminer-server/var/lib/adminer-server/public/adminer.php /var/lib/adminer-server/public/adminer.php
+  cp -f /opt/adminer-server/var/lib/adminer-server/public/index.php /var/lib/adminer-server/public/index.php
+  cp -f /opt/adminer-server/var/lib/adminer-server/public/adminer.css /var/lib/adminer-server/public/adminer.css
+  chown -R adminer-server:adminer-server /var/lib/adminer-server
+fi
+
+if [ -f "/bin/systemctl" ]; then
+  # systemd (el7)
+  mkdir -p /usr/lib/systemd/system
+  cp -f /opt/adminer-server/usr/lib/systemd/system/adminer-server.service /usr/lib/systemd/system/adminer-server.service
+  /bin/systemctl daemon-reload
+  sleep 2
+  /bin/systemctl enable adminer-server.service
+
+elif [ -f "/etc/redhat-release" -o -f "/etc/fedora-release" -o -f "/etc/system-release" ]; then
+  # init (el5, el6)
+  cp -f /opt/adminer-server/etc/init.d/adminer-server /etc/init.d/adminer-server
+  /sbin/chkconfig --add adminer-server
+  /sbin/chkconfig adminer-server on
+fi
+
+exit 0

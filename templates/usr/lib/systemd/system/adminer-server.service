@@ -1,0 +1,15 @@
+[Unit]
+Description=adminer-server
+After=network.target remote-fs.target nss-lookup.target
+
+[Service]
+Type=forking
+PIDFile=/var/run/adminer-server/httpd.pid
+ExecStart=/opt/adminer-server/embedded/sbin/httpd -f /etc/adminer-server/httpd.conf -k start
+ExecReload=/opt/adminer-server/embedded/sbin/httpd -f /etc/adminer-server/httpd.conf -t
+ExecReload=/bin/kill -HUP $MAINPID
+ExecStop=/opt/adminer-server/embedded/sbin/httpd -f /etc/adminer-server/httpd.conf -k stop
+PrivateTmp=true
+
+[Install]
+WantedBy=multi-user.target

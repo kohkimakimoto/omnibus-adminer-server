@@ -1,0 +1,6 @@
+/var/log/adminer-server/*.log {
+       missingok
+       weekly
+       notifempty
+       nocompress
+}

@@ -1,0 +1,18 @@
+#!/bin/sh
+#
+# Perform necessary adminer-server removal steps
+# after package is uninstalled.
+#
+rm -f /etc/logrotate.d/adminer-server
+rm -f /etc/adminer-server/httpd.conf
+rm -f /etc/adminer-server/php.ini
+
+if [ -f "/bin/systemctl" ]; then
+  # systemd (el7)
+  rm -f /usr/lib/systemd/system/adminer-server.service
+elif [ -f "/etc/redhat-release" -o -f "/etc/fedora-release" -o -f "/etc/system-release" ]; then
+  # init (el5, el6)
+  rm -f /etc/init.d/adminer-server
+fi
+
+exit 0
