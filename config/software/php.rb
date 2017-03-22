@@ -12,6 +12,8 @@ dependency "krb5"
 dependency "readline"
 dependency "curl"
 dependency "apache"
+dependency "gd"
+dependency "libXpm"
 
 version "7.0.12" do
   source md5: "5dd00a65a1d76a4792f6989d4576623d"
@@ -51,6 +53,8 @@ build do
           " --with-mysqli=mysqlnd" \
           " --with-pdo-mysql=mysqlnd" \
           " --with-pdo-sqlite" \
+          " --with-gd=#{install_dir}/embedded" \
+          " --with-xpm-dir=#{install_dir}/embedded" \
           " --with-readline=#{install_dir}/embedded" \
           " --with-curl=#{install_dir}/embedded" \
           " --with-zlib=#{install_dir}/embedded" \

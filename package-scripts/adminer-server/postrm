@@ -4,8 +4,7 @@
 # after package is uninstalled.
 #
 rm -f /etc/logrotate.d/adminer-server
-rm -f /etc/adminer-server/httpd.conf
-rm -f /etc/adminer-server/php.ini
+rm -rf /etc/adminer-server
 
 if [ -f "/bin/systemctl" ]; then
   # systemd (el7)

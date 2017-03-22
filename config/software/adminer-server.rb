@@ -53,8 +53,6 @@ build do
     file_path = File.join(install_path, 'var', 'lib', 'adminer-server', 'public', 'index.php')
     generate_from_template.call file_path, template.call('var', 'lib', 'adminer-server', 'public', 'index.php'), binding, mode: 0644
 
-
-
   end
 
 end
