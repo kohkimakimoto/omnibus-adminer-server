@@ -4,10 +4,9 @@ After=network.target remote-fs.target nss-lookup.target
 
 [Service]
 Type=forking
-PIDFile=/var/run/adminer-server/httpd.pid
+PIDFile=/var/run/adminer-server.pid
 ExecStart=/opt/adminer-server/embedded/sbin/httpd -f /etc/adminer-server/httpd.conf -k start
-ExecReload=/opt/adminer-server/embedded/sbin/httpd -f /etc/adminer-server/httpd.conf -t
-ExecReload=/bin/kill -HUP $MAINPID
+ExecReload=/opt/adminer-server/embedded/sbin/httpd -f /etc/adminer-server/httpd.conf -k graceful
 ExecStop=/opt/adminer-server/embedded/sbin/httpd -f /etc/adminer-server/httpd.conf -k stop
 PrivateTmp=true
 

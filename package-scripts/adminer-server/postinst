@@ -40,10 +40,6 @@ if [ ! -e "/var/log/adminer-server" ]; then
   mkdir -p /var/log/adminer-server
 fi
 
-if [ ! -e "/var/run/adminer-server" ]; then
-  mkdir -p /var/run/adminer-server
-fi
-
 if [ ! -e "/var/lib/adminer-server" ]; then
   mkdir -p /var/lib/adminer-server
   mkdir -p /var/lib/adminer-server/php_session
